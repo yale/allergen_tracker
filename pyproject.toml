@@ -1,0 +1,18 @@
+[project]
+name = "allergen-tracker"
+version = "0.1.0"
+description = "Fetches feed data from Huckleberry and tracks allergen exposure"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Yale Rosenberg" },
+    { name = "Leora Rosenberg" }
+]
+
+dependencies = [
+    "huckleberry-api>=0.1.17",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv]
+dev-dependencies = []
