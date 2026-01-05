@@ -67,22 +67,13 @@ def extract_solid_food_entries(all_entries):
     Filter feed entries to extract only solid food entries.
 
     Returns:
-        tuple: (solid_entries, mode_counts)
+        list: List of tuples (entry_id, entry_data) sorted by timestamp (newest first)
     """
-    mode_counts = {}
-    solid_entries = []
-
-    for entry_id, data in all_entries:
-        mode = data.get("mode", "unknown")
-        mode_counts[mode] = mode_counts.get(mode, 0) + 1
-
-        if mode == "solids":
-            solid_entries.append((entry_id, data))
-
-    # Sort solid entries by timestamp (newest first)
+    # Filter for solids and sort by timestamp
+    solid_entries = [(entry_id, data) for entry_id, data in all_entries if data.get("mode") == "solids"]
     solid_entries.sort(key=lambda x: x[1].get("start", 0), reverse=True)
 
-    return solid_entries, mode_counts
+    return solid_entries
 
 
 def print_solid_food_entry(entry_num, doc_id, entry):
@@ -142,13 +133,9 @@ def main():
         all_entries = fetch_all_feed_intervals(client, child_uid)
 
         # Extract solid food entries
-        solid_entries, mode_counts = extract_solid_food_entries(all_entries)
+        solid_entries = extract_solid_food_entries(all_entries)
 
         # Print summary
-        print(f"\nBreakdown by mode:")
-        for mode, count in sorted(mode_counts.items()):
-            print(f"  {mode}: {count}")
-
         print(f"\n{'=' * 80}")
         print(f"SOLID FOOD ENTRIES: {len(solid_entries)} total")
         print("=" * 80)
