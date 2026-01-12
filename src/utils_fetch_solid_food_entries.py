@@ -70,8 +70,8 @@ def extract_solid_food_entries(all_entries):
         list: List of tuples (entry_id, entry_data) sorted by timestamp (newest first)
     """
     # Filter for solids and sort by timestamp
-    solid_entries = [(entry_id, data) for entry_id, data in all_entries if data.get("mode") == "solids"]
-    solid_entries.sort(key=lambda x: x[1].get("start", 0), reverse=True)
+    solid_entries = [data for entry_id, data in all_entries if data.get("mode") == "solids"]
+    solid_entries.sort(key=lambda x: x.get("start", 0), reverse=True)
 
     return solid_entries
 
@@ -112,7 +112,7 @@ def print_solid_food_entry(entry_num, doc_id, entry):
     print("\n" + "=" * 80)
 
 
-def main():
+def fetch_solid_food_entries():
     """Main function to fetch and display solid food entries."""
     try:
         # Initialize API and get child info
@@ -141,8 +141,11 @@ def main():
         print("=" * 80)
 
         # Print all solid food entries
-        for i, (doc_id, entry) in enumerate(solid_entries, 1):
-            print_solid_food_entry(i, doc_id, entry)
+        #for i, (doc_id, entry) in enumerate(solid_entries, 1):
+            #print_solid_food_entry(i, doc_id, entry)
+            #print(entry)
+
+        return solid_entries
 
     except Exception as e:
         print(f"Error: {e}")

@@ -11,8 +11,11 @@ authors = [
 
 dependencies = [
     "huckleberry-api>=0.1.17",
+    "pandas>=2.3.3",
     "python-dotenv>=1.0.0",
 ]
 
 [tool.uv]
-dev-dependencies = []
+dev-dependencies = [
+    "ipykernel>=7.1.0",
+]
