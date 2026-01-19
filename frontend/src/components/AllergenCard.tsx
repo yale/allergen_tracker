@@ -8,14 +8,14 @@ interface AllergenCardProps {
 function getBackgroundColor(days: number | null): string {
   if (days === null) return "bg-gray-200";
   if (days <= 3) return "bg-green-200";
-  if (days <= 7) return "bg-yellow-200";
+  if (days <= 6) return "bg-yellow-200";
   return "bg-red-200";
 }
 
 function getBorderColor(days: number | null): string {
   if (days === null) return "border-gray-400";
   if (days <= 3) return "border-green-400";
-  if (days <= 7) return "border-yellow-400";
+  if (days <= 6) return "border-yellow-400";
   return "border-red-400";
 }
 

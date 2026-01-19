@@ -1,14 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { AllergenList } from './components/AllergenList';
 import { fetchAllergens, refreshAllergens } from './api/allergens';
-import type { Allergen } from './types/allergen';
+import { useWebSocket } from './hooks/useWebSocket';
+import type { Allergen, AllergenResponse } from './types/allergen';
 
 function App() {
   const [allergens, setAllergens] = useState<Allergen[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleWebSocketUpdate = useCallback((data: AllergenResponse) => {
+    setAllergens(data.allergens);
+    setLastUpdated(data.last_updated);
+    setIsLoading(false);
+  }, []);
+
+  const { isConnected } = useWebSocket({ onUpdate: handleWebSocketUpdate });
 
   const loadAllergens = async () => {
     try {
@@ -47,6 +56,7 @@ function App() {
         lastUpdated={lastUpdated}
         onRefresh={handleRefresh}
         isLoading={isLoading}
+        isConnected={isConnected}
       />
       <main className="max-w-6xl mx-auto px-4 pb-8">
         {error && (

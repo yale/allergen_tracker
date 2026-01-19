@@ -2,6 +2,7 @@ interface HeaderProps {
   lastUpdated: string | null;
   onRefresh: () => void;
   isLoading: boolean;
+  isConnected?: boolean;
 }
 
 function formatDateTime(dateStr: string | null): string {
@@ -15,14 +16,22 @@ function formatDateTime(dateStr: string | null): string {
   });
 }
 
-export function Header({ lastUpdated, onRefresh, isLoading }: HeaderProps) {
+export function Header({ lastUpdated, onRefresh, isLoading, isConnected }: HeaderProps) {
   return (
     <header className="bg-white shadow-sm mb-6">
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
               Allergen Tracker
+              {isConnected !== undefined && (
+                <span
+                  className={`inline-block w-2.5 h-2.5 rounded-full ${
+                    isConnected ? 'bg-red-500 animate-pulse' : 'bg-gray-400'
+                  }`}
+                  title={isConnected ? 'Live' : 'Disconnected'}
+                />
+              )}
             </h1>
             <p className="text-sm text-gray-500">
               Last updated: {formatDateTime(lastUpdated)}

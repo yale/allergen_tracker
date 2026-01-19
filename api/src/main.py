@@ -8,7 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models import HealthResponse
 from routes.allergens import router as allergens_router
+from routes.websocket import router as websocket_router
 from services.realtime_listener import AllergenCache
+from websocket.connection_manager import ConnectionManager
 
 # Configure logging
 logging.basicConfig(
@@ -21,7 +23,13 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifespan - start/stop Firebase listener."""
+    import asyncio
+
     # Startup
+    # Set the event loop for WebSocket broadcasts from Firebase callback thread
+    manager = ConnectionManager.get_instance()
+    manager.set_event_loop(asyncio.get_event_loop())
+
     cache = AllergenCache.get_instance()
     cache.start_listener()
     logger.info("Application startup complete")
@@ -53,6 +61,7 @@ app.add_middleware(
 
 # Include routes
 app.include_router(allergens_router, prefix="/api")
+app.include_router(websocket_router)
 
 
 @app.get("/api/health", response_model=HealthResponse)

@@ -79,6 +79,15 @@ class AllergenCache:
             # Persist to file cache
             write_cache(allergens, self._last_updated)
 
+            # Broadcast update to WebSocket clients
+            from websocket.connection_manager import ConnectionManager
+            manager = ConnectionManager.get_instance()
+            manager.broadcast_sync({
+                "type": "update",
+                "allergens": allergens,
+                "last_updated": self._last_updated.isoformat()
+            })
+
             logger.info("Updated allergen cache with %d allergens from %d solid food entries",
                        len(allergens), len(solid_entries))
 
