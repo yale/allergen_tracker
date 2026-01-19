@@ -1,39 +1,110 @@
 # Allergen Tracker
 
-A tool to track allergen exposure for babies using the Huckleberry API.
+Track allergen exposure for babies using data from the Huckleberry baby tracking app.
 
-## Status
+## Overview
 
-Work in progress. Currently fetches and displays solid food entries from Huckleberry with timestamps, foods eaten, notes, and reactions.
+This application fetches solid food feeding data from Huckleberry, parses the entries, and calculates how long it has been since your baby was exposed to specific allergens. It tracks the FDA top 9 allergens: dairy, egg, fish, crustacean shellfish, peanut, tree nut, wheat, soy, and sesame.
 
-## Setup
+## Quick Start
 
-1. Install dependencies using uv:
+### Prerequisites
+- Python 3.10+ with [uv](https://github.com/astral-sh/uv)
+- Node.js 18+
+- Huckleberry account credentials
+
+### 1. Start the API
 ```bash
+cd api
 uv sync
-```
 
-2. Copy `.env.example` to `.env` and add your Huckleberry credentials:
+# Create .env file with your Huckleberry credentials
+echo "HUCKLEBERRY_EMAIL=your-email@example.com" > .env
+echo "HUCKLEBERRY_PASSWORD=your-password" >> .env
+
+uv run src/main.py
+```
+The API runs at http://localhost:8000
+
+### 2. Start the Frontend
 ```bash
-cp .env.example .env
+cd frontend
+npm install
+npm run dev
+```
+The frontend runs at http://localhost:5173
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/allergens` | Returns all allergens with days since last exposure |
+| POST | `/api/refresh` | Manually trigger cache refresh |
+| GET | `/api/health` | Health check |
+
+### Response Format
+
+```json
+{
+  "allergens": [
+    {
+      "name": "fish",
+      "days_since_exposure": 5,
+      "last_exposure_date": "2026-01-14",
+      "foods": ["salmon", "sardine", "tuna", "cod", "tilapia", "anchovy"]
+    }
+  ],
+  "last_updated": "2026-01-19T10:30:00Z"
+}
 ```
 
-3. Edit `.env` with your Huckleberry account credentials:
+## Features
+
+- Dashboard showing each allergen with days since last exposure
+- Color-coded urgency indicators:
+  - Green: ≤3 days since exposure
+  - Yellow: 4-7 days since exposure
+  - Red: >7 days since exposure
+- Manual refresh button
+- 24-hour file-based caching
+- Expandable food list per allergen
+
+## Tech Stack
+
+**Backend**
+- Python 3.10+
+- FastAPI + Uvicorn
+- huckleberry-api, pandas
+
+**Frontend**
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS v4
+
+## Project Structure
+
 ```
-HUCKLEBERRY_EMAIL=your_email@example.com
-HUCKLEBERRY_PASSWORD=your_password_here
+├── api/
+│   ├── src/
+│   │   ├── main.py              # FastAPI entry point
+│   │   ├── models.py            # Pydantic models
+│   │   ├── routes/
+│   │   │   └── allergens.py     # API endpoints
+│   │   ├── services/
+│   │   │   ├── allergen_service.py
+│   │   │   └── huckleberry.py
+│   │   └── cache/
+│   │       └── file_cache.py
+│   └── cache/                   # Cached data (gitignored)
+└── frontend/
+    └── src/
+        ├── App.tsx
+        ├── components/
+        │   ├── AllergenCard.tsx
+        │   ├── AllergenList.tsx
+        │   └── Header.tsx
+        ├── api/
+        │   └── allergens.ts
+        └── types/
+            └── allergen.ts
 ```
-
-## Usage
-
-Run the script to fetch and display all solid food entries:
-
-```bash
-uv run src/allergen_tracker/main.py
-```
-
-This will display:
-- All solid food entries sorted by date
-- Foods eaten at each meal
-- Any notes or reactions recorded
-- Summary breakdown by feeding mode

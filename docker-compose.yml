@@ -1,0 +1,34 @@
+services:
+  api:
+    build: ./api
+    container_name: allergen-api
+    restart: unless-stopped
+    env_file:
+      - ./api/.env
+    volumes:
+      - api-cache:/app/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - allergen-network
+
+  frontend:
+    build: ./frontend
+    container_name: allergen-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    networks:
+      - allergen-network
+
+volumes:
+  api-cache:
+
+networks:
+  allergen-network:
+    driver: bridge
