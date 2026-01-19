@@ -1,44 +1,38 @@
 """Allergen API routes."""
 
 from datetime import datetime, timezone
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from models import AllergenResponse, RefreshResponse
-from services.allergen_service import get_allergen_data
-from cache.file_cache import read_cache, write_cache, clear_cache
+from services.realtime_listener import AllergenCache
 
 router = APIRouter()
-
-
-def _get_allergens_with_cache() -> tuple[list[dict], datetime]:
-    """Get allergen data, using cache if valid."""
-    cached = read_cache()
-
-    if cached:
-        return cached['allergens'], datetime.fromisoformat(cached['last_updated'])
-
-    # Cache miss or invalid - fetch fresh data
-    allergens = get_allergen_data()
-    last_updated = datetime.now(timezone.utc)
-    write_cache(allergens, last_updated)
-
-    return allergens, last_updated
 
 
 @router.get("/allergens", response_model=AllergenResponse)
 async def get_allergens():
     """Returns all allergens with days since last exposure."""
-    allergens, last_updated = _get_allergens_with_cache()
+    cache = AllergenCache.get_instance()
+    allergens, last_updated = cache.get_allergens()
+
+    if not allergens:
+        raise HTTPException(
+            status_code=503,
+            detail="Allergen data not yet available. Please wait for cache to initialize."
+        )
+
     return AllergenResponse(allergens=allergens, last_updated=last_updated)
 
 
 @router.post("/refresh", response_model=RefreshResponse)
 async def refresh_cache():
     """Manually trigger cache refresh."""
-    clear_cache()
-    allergens = get_allergen_data()
-    last_updated = datetime.now(timezone.utc)
-    write_cache(allergens, last_updated)
+    cache = AllergenCache.get_instance()
+
+    try:
+        allergens, last_updated = cache.refresh()
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e))
 
     return RefreshResponse(
         status="success",

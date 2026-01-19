@@ -1,15 +1,41 @@
 """FastAPI application entry point."""
 
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from models import HealthResponse
 from routes.allergens import router as allergens_router
+from services.realtime_listener import AllergenCache
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan - start/stop Firebase listener."""
+    # Startup
+    cache = AllergenCache.get_instance()
+    cache.start_listener()
+    logger.info("Application startup complete")
+    yield
+    # Shutdown
+    cache.stop_listener()
+    logger.info("Application shutdown complete")
+
 
 app = FastAPI(
     title="Allergen Tracker API",
     description="API for tracking allergen exposure in baby food entries",
-    version="0.1.0"
+    version="0.1.0",
+    lifespan=lifespan
 )
 
 # CORS middleware for frontend
