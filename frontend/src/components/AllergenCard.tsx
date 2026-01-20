@@ -29,6 +29,18 @@ function formatDate(dateStr: string | null): string {
   });
 }
 
+const ALLERGEN_EMOJI: Record<string, string> = {
+  dairy: "🥛",
+  egg: "🥚",
+  fish: "🐟",
+  "crustacean shellfish": "🦐",
+  peanut: "🥜",
+  "tree nut": "🌰",
+  wheat: "🌾",
+  soy: "🫛",
+  sesame: "🫘",
+};
+
 export function AllergenCard({ allergen }: AllergenCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const bgColor = getBackgroundColor(allergen.days_since_exposure);
@@ -39,7 +51,9 @@ export function AllergenCard({ allergen }: AllergenCardProps) {
       className={`${bgColor} ${borderColor} border-2 rounded-lg p-4 shadow-md transition-all`}
     >
       <div className="flex justify-between items-start">
-        <h3 className="text-lg font-semibold capitalize">{allergen.name}</h3>
+        <h3 className="text-lg font-semibold capitalize">
+          {ALLERGEN_EMOJI[allergen.name] || "🍽️"} {allergen.name}
+        </h3>
         <div className="text-right">
           <div className="text-3xl font-bold">
             {allergen.days_since_exposure !== null
