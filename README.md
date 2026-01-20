@@ -12,15 +12,17 @@ This application fetches solid food feeding data from Huckleberry, parses the en
 - Python 3.10+ with [uv](https://github.com/astral-sh/uv)
 - Node.js 18+
 - Huckleberry account credentials
+- Anthropic API key (for AI-powered meal logging)
 
 ### 1. Start the API
 ```bash
 cd api
 uv sync
 
-# Create .env file with your Huckleberry credentials
+# Create .env file with your Huckleberry credentials and Anthropic API key
 echo "HUCKLEBERRY_EMAIL=your-email@example.com" > .env
 echo "HUCKLEBERRY_PASSWORD=your-password" >> .env
+echo "ANTHROPIC_API_KEY=your-anthropic-key" >> .env
 
 uv run src/main.py
 ```
@@ -41,6 +43,9 @@ The frontend runs at http://localhost:5173
 | GET | `/api/allergens` | Returns all allergens with days since last exposure |
 | POST | `/api/refresh` | Manually trigger cache refresh |
 | GET | `/api/health` | Health check |
+| POST | `/api/meals/analyze` | Analyze meal photo with AI, returns foods grouped by component |
+| POST | `/api/meals/submit` | Submit meal components to Huckleberry (creates one entry per component) |
+| GET | `/api/meals/suggestions` | Get known foods for autocomplete |
 
 ### Response Format
 
@@ -68,6 +73,16 @@ The frontend runs at http://localhost:5173
 - Manual refresh button
 - 24-hour file-based caching
 - Expandable food list per allergen
+- AI-powered meal logging:
+  - Take photos of meals to automatically identify foods
+  - Foods are grouped by component (separate dishes/sides)
+  - Each component creates a separate Huckleberry entry
+  - Multiselect combobox UI for easy editing
+  - Autocomplete suggestions for known allergen foods
+
+## Roadmap
+
+See [IDEAS.md](./IDEAS.md) for planned features and improvements.
 
 ## Tech Stack
 
@@ -75,6 +90,7 @@ The frontend runs at http://localhost:5173
 - Python 3.10+
 - FastAPI + Uvicorn
 - huckleberry-api, pandas
+- Anthropic API (Claude Vision for meal photo analysis)
 
 **Frontend**
 - React 19 + TypeScript
@@ -89,10 +105,13 @@ The frontend runs at http://localhost:5173
 │   │   ├── main.py              # FastAPI entry point
 │   │   ├── models.py            # Pydantic models
 │   │   ├── routes/
-│   │   │   └── allergens.py     # API endpoints
+│   │   │   ├── allergens.py     # Allergen tracking endpoints
+│   │   │   └── meals.py         # Meal logging endpoints
 │   │   ├── services/
-│   │   │   ├── allergen_service.py
-│   │   │   └── huckleberry.py
+│   │   │   ├── allergen_service.py  # Allergen tracking logic
+│   │   │   ├── ai_service.py        # Claude Vision API integration
+│   │   │   ├── meal_service.py      # Meal submission to Huckleberry
+│   │   │   └── huckleberry.py       # Huckleberry API client
 │   │   └── cache/
 │   │       └── file_cache.py
 │   └── cache/                   # Cached data (gitignored)
@@ -102,9 +121,14 @@ The frontend runs at http://localhost:5173
         ├── components/
         │   ├── AllergenCard.tsx
         │   ├── AllergenList.tsx
-        │   └── Header.tsx
+        │   ├── Header.tsx
+        │   ├── MealLogger.tsx   # Meal logging modal
+        │   ├── PhotoCapture.tsx # Camera/photo upload
+        │   └── FoodReview.tsx   # Component-based food editor
         ├── api/
-        │   └── allergens.ts
+        │   ├── allergens.ts
+        │   └── meals.ts         # Meal logging API client
         └── types/
-            └── allergen.ts
+            ├── allergen.ts
+            └── meal.ts          # Meal/component types
 ```
