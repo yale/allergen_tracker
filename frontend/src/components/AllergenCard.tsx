@@ -48,14 +48,35 @@ export function AllergenCard({ allergen }: AllergenCardProps) {
 
   return (
     <div
-      className={`${bgColor} ${borderColor} border-2 rounded-lg p-4 shadow-md transition-all`}
+      className={`${bgColor} ${borderColor} border-2 rounded-lg p-2.5 shadow-sm transition-all`}
     >
       <div className="flex justify-between items-start">
-        <h3 className="text-lg font-semibold capitalize">
-          {ALLERGEN_EMOJI[allergen.name] || "🍽️"} {allergen.name}
-        </h3>
+        <div>
+          <h3 className="text-base font-semibold capitalize">
+            {ALLERGEN_EMOJI[allergen.name] || "🍽️"} {allergen.name}
+          </h3>
+          <div className="mt-1 text-xs text-gray-600">
+            Last: {formatDate(allergen.last_exposure_date)}
+          </div>
+
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="mt-1 text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+          >
+            <span>{isExpanded ? "▼" : "▶"}</span>
+            <span>{allergen.foods.length} tracked foods</span>
+          </button>
+
+          {isExpanded && (
+            <div className="mt-1.5 text-xs text-gray-600">
+              <ul className="list-disc list-inside">
+                {allergen.foods.map((food) => <li key={food}>{food}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
         <div className="text-right">
-          <div className="text-3xl font-bold">
+          <div className="text-2xl font-bold">
             {allergen.days_since_exposure !== null
               ? allergen.days_since_exposure
               : "—"}
@@ -65,26 +86,6 @@ export function AllergenCard({ allergen }: AllergenCardProps) {
           </div>
         </div>
       </div>
-
-      <div className="mt-2 text-sm text-gray-600">
-        Last: {formatDate(allergen.last_exposure_date)}
-      </div>
-
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="mt-2 text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
-      >
-        <span>{isExpanded ? "▼" : "▶"}</span>
-        <span>{allergen.foods.length} tracked foods</span>
-      </button>
-
-      {isExpanded && (
-        <div className="mt-2 text-sm text-gray-600">
-          <ul className="list-disc list-inside">
-            {allergen.foods.map((food) => <li key={food}>{food}</li>)}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }

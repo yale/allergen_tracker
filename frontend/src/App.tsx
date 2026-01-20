@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { AllergenList } from './components/AllergenList';
+import { MealLogger } from './components/MealLogger';
 import { fetchAllergens, refreshAllergens } from './api/allergens';
 import { useWebSocket } from './hooks/useWebSocket';
+import { config } from './config';
 import type { Allergen, AllergenResponse } from './types/allergen';
 
 function App() {
@@ -10,6 +12,7 @@ function App() {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isMealLoggerOpen, setIsMealLoggerOpen] = useState(false);
 
   const handleWebSocketUpdate = useCallback((data: AllergenResponse) => {
     setAllergens(data.allergens);
@@ -57,8 +60,9 @@ function App() {
         onRefresh={handleRefresh}
         isLoading={isLoading}
         isConnected={isConnected}
+        onLogMeal={config.features.mealLogging ? () => setIsMealLoggerOpen(true) : undefined}
       />
-      <main className="max-w-6xl mx-auto px-4 pb-8">
+      <main className="max-w-6xl mx-auto px-4 pb-4">
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
@@ -70,6 +74,12 @@ function App() {
           <AllergenList allergens={allergens} />
         )}
       </main>
+      {config.features.mealLogging && (
+        <MealLogger
+          isOpen={isMealLoggerOpen}
+          onClose={() => setIsMealLoggerOpen(false)}
+        />
+      )}
     </div>
   );
 }

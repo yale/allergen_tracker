@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models import HealthResponse
 from routes.allergens import router as allergens_router
+from routes.meals import router as meals_router
 from routes.websocket import router as websocket_router
 from services.realtime_listener import AllergenCache
 from websocket.connection_manager import ConnectionManager
@@ -61,6 +62,7 @@ app.add_middleware(
 
 # Include routes
 app.include_router(allergens_router, prefix="/api")
+app.include_router(meals_router, prefix="/api")
 app.include_router(websocket_router)
 
 
@@ -72,4 +74,4 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

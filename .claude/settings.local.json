@@ -3,7 +3,11 @@
     "allow": [
       "Bash(uv run:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(make install:*)",
+      "Bash(npm run build:*)",
+      "Bash(python3 -m py_compile:*)",
+      "Bash(git add:*)"
     ]
   }
 }
