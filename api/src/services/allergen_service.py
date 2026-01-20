@@ -6,117 +6,19 @@ from datetime import date
 from services.huckleberry import fetch_solid_food_entries
 
 
-# Keywords used for partial/fuzzy matching against food entries
-# Matching is case-insensitive and tolerant of misspellings via substring matching
-ALLERGEN_KEYWORDS = {
-    'dairy': [
-        # Milk products
-        'milk', 'cream', 'butter', 'ghee',
-        # Yogurt (including misspellings)
-        'yogurt', 'yoghurt', 'yogart', 'yougurt', 'yohgurt',
-        # Cheese varieties
-        'cheese', 'cheez', 'mozzarella', 'mozarella', 'mozzarela', 'cheddar', 'chedar',
-        'parmesan', 'parmasan', 'parmasean', 'parm', 'brie', 'gouda', 'feta', 'ricotta',
-        'ricota', 'cottage', 'cotage', 'swiss', 'provolone', 'colby', 'jack', 'goat cheese',
-        'paneer', 'queso', 'mascarpone',
-        # Other dairy
-        'custard', 'pudding', 'ice cream', 'icecream', 'gelato', 'whey', 'casein',
-        'kefir', 'lassi', 'ranch', 'alfredo',
-    ],
-    'egg': [
-        'egg', 'eggs', 'eggg', 'egs',
-        # Preparations
-        'omelette', 'omelet', 'omlette', 'omlet', 'scramble', 'frittata', 'quiche',
-        'souffle', 'soufle', 'meringue', 'merang', 'custard',
-        # Baked goods with egg as key ingredient
-        'challah', 'chalah', 'challa', 'brioche', 'french toast',
-        # Egg components
-        'yolk', 'albumin',
-        # Mayo-based
-        'mayo', 'mayonnaise', 'mayonaise', 'aioli',
-    ],
-    'fish': [
-        'fish', 'salmon', 'salman', 'samon', 'tuna', 'tunna', 'cod', 'tilapia', 'tillapia',
-        'sardine', 'sardines', 'anchovy', 'anchovies', 'anchove', 'herring', 'mackerel',
-        'mackeral', 'trout', 'bass', 'halibut', 'haddock', 'sole', 'flounder', 'snapper',
-        'grouper', 'catfish', 'perch', 'pike', 'pollock', 'whiting', 'swordfish', 'mahi',
-        'wahoo', 'branzino', 'sea bass', 'seabass', 'arctic char',
-    ],
-    'crustacean shellfish': [
-        'shrimp', 'shripm', 'shrinp', 'prawn', 'prawns', 'lobster', 'lobstar', 'crab',
-        'crabs', 'crayfish', 'crawfish', 'crawdad', 'langoustine', 'scampi', 'krill',
-    ],
-    'peanut': [
-        'peanut', 'peanuts', 'penut', 'penuts', 'peanit', 'groundnut',
-        'bamba', 'bamaba', 'bambas',
-        # Note: "pb" commonly used for peanut butter
-        'pb&j', 'pb and j', 'pbj',
-    ],
-    'tree nut': [
-        'almond', 'almonds', 'amond', 'almand', 'cashew', 'cashews', 'cashue', 'cashu',
-        'walnut', 'walnuts', 'wallnut', 'pecan', 'pecans', 'pican', 'pistachio',
-        'pistachios', 'pistacho', 'hazelnut', 'hazelnuts', 'hazelnut', 'filbert',
-        'macadamia', 'macademia', 'brazil nut', 'brazilnut', 'pine nut', 'pinenut',
-        'chestnut', 'chesnut', 'praline', 'marzipan', 'nutella',
-        # Nut milks/butters
-        'almond milk', 'cashew milk', 'almond butter', 'cashew butter',
-    ],
-    'wheat': [
-        'wheat', 'wheatgerm', 'bread', 'breads', 'bred', 'toast', 'toasted',
-        'pasta', 'pastas', 'noodle', 'noodles', 'spaghetti', 'spagetti', 'spagheti',
-        'macaroni', 'maccaroni', 'penne', 'fusilli', 'rigatoni', 'linguine', 'fettuccine',
-        'lasagna', 'lasagne', 'ravioli', 'tortellini', 'gnocchi',
-        'couscous', 'cous cous', 'couscouse', 'bulgur', 'bulgar', 'farro', 'semolina',
-        # Baked goods
-        'matzah', 'matza', 'matzoh', 'matzo', 'challah', 'chalah', 'bagel', 'bagle',
-        'croissant', 'croissan', 'muffin', 'biscuit', 'biscit', 'cracker', 'pretzel',
-        'pretsel', 'pancake', 'pancakes', 'waffle', 'waffles', 'wafel', 'pita', 'pitta',
-        'tortilla', 'tortila', 'wrap', 'flour tortilla', 'naan', 'nan', 'roti', 'chapati',
-        # Cereals and grains
-        'cereal', 'cheerios', 'oatmeal', 'farina', 'cream of wheat',
-        # Breaded items
-        'breaded', 'breadcrumb', 'panko', 'crusted',
-        # Other wheat products
-        'seitan', 'flour', 'gluten',
-    ],
-    'soy': [
-        'soy', 'soya', 'soybean', 'soybeans', 'edamame', 'edamamme', 'edemame',
-        'tofu', 'toffu', 'tempeh', 'tempe', 'miso', 'natto',
-        'soy sauce', 'soysauce', 'tamari', 'teriyaki',
-        'soy milk', 'soymilk',
-    ],
-    'sesame': [
-        'sesame', 'seseme', 'seasame', 'sesamee',
-        'tahini', 'tahina', 'tehini', 'tehina',
-        'hummus', 'humus', 'hummous', 'houmous', 'houmus',
-        'halvah', 'halva', 'halawa',
-        'baba ganoush', 'baba ghanoush', 'babaganoush',
-    ],
+ALLERGEN_FOOD_MAP = {
+    'dairy': ['cheese', 'sour cream', 'butter', 'yogurt', 'yoghurt', 'greek yogurt', 'greek yoghurt',
+              'mozzarella', 'cheddar cheese', 'cream cheese', 'cottage cheese', 'ricotta cheese'],
+    'egg': ['egg', 'omlette', 'scrambled egg', 'egg white', 'egg yolk', 'challah'],
+    'fish': ['salmon', 'sardine', 'tuna', 'cod', 'tilapia', 'anchovy'],
+    'crustacean shellfish': ['shrimp', 'prawn', 'lobster', 'crab', 'crayfish', 'crawfish'],
+    'peanut': ['peanut', 'peanut butter', 'bamba'],
+    'tree nut': ['almond', 'almond flour', 'almond milk', 'almond butter',
+                 'cashew', 'walnut', 'pecan', 'pistachio', 'brazil nut', 'hazelnut', 'macadamia', 'pine nut'],
+    'wheat': ['wheat', 'toast', 'bread', 'pasta', 'noodles', 'couscous', 'matzah', 'challah'],
+    'soy': ['soybean oil', 'soy milk', 'soybean', 'edamame', 'tofu'],
+    'sesame': ['sesame', 'sesame oil', 'tahini', 'hummus']
 }
-
-
-def food_matches_allergen(food: str, keywords: list[str]) -> bool:
-    """
-    Check if a food entry matches any allergen keyword using fuzzy matching.
-
-    Uses substring matching in both directions:
-    - Checks if any keyword is contained in the food entry
-    - Checks if the food entry is contained in any keyword
-
-    This handles misspellings, plurals, and food descriptions like "scrambled eggs with cheese".
-    """
-    food_lower = food.lower().strip()
-
-    for keyword in keywords:
-        keyword_lower = keyword.lower()
-        # Check if keyword is in food entry (e.g., "egg" in "scrambled eggs")
-        if keyword_lower in food_lower:
-            return True
-        # Check if food entry is in keyword (e.g., "eggs" matching "scrambled eggs")
-        if food_lower in keyword_lower:
-            return True
-
-    return False
 
 
 def process_solid_food_data(solid_food_data_raw: list[dict]) -> pd.DataFrame:
@@ -154,13 +56,10 @@ def calculate_allergen_exposure(df: pd.DataFrame) -> list[dict]:
     today = date.today()
     allergen_data = []
 
-    for allergen, keywords in ALLERGEN_KEYWORDS.items():
-        # Find entries matching this allergen using fuzzy matching
-        mask = df['food'].apply(lambda food: food_matches_allergen(food, keywords))
+    for allergen, foods in ALLERGEN_FOOD_MAP.items():
+        # Find entries matching this allergen's foods
+        mask = df['food'].isin(foods)
         matching_entries = df[mask]
-
-        # Get unique foods that matched for display
-        matched_foods = matching_entries['food'].unique().tolist() if not matching_entries.empty else []
 
         if matching_entries.empty:
             last_exposure_date = None
@@ -173,7 +72,7 @@ def calculate_allergen_exposure(df: pd.DataFrame) -> list[dict]:
             'name': allergen,
             'days_since_exposure': days_since,
             'last_exposure_date': last_exposure_date.isoformat() if last_exposure_date else None,
-            'foods': matched_foods,  # Show actual matched foods instead of keyword list
+            'foods': foods
         })
 
     # Sort by days_since_exposure descending (most urgent first), None values at end
