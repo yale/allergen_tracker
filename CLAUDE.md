@@ -12,6 +12,16 @@ This application fetches solid food feeding data from the Huckleberry baby track
 /api        - FastAPI backend
 /frontend   - React + Vite frontend
 IDEAS.md    - Feature ideas and roadmap
+Makefile    - Development automation
+```
+
+## Quick Development Commands
+
+```bash
+make install   # Install dependencies for both API and frontend
+make dev       # Run API and frontend in parallel
+make api       # Run API only
+make frontend  # Run frontend only
 ```
 
 ## API (`/api`)
@@ -24,15 +34,23 @@ IDEAS.md    - Feature ideas and roadmap
 
 ### Setup
 ```bash
+# From project root:
+make install  # Installs both API and frontend dependencies
+
+# Or manually:
 cd api
 uv sync
-# Create .env with HUCKLEBERRY_EMAIL and HUCKLEBERRY_PASSWORD
+# Create .env with HUCKLEBERRY_EMAIL, HUCKLEBERRY_PASSWORD, and ANTHROPIC_API_KEY
 ```
 
 ### Running
 ```bash
+# From project root:
+make api  # Runs on http://localhost:8000
+
+# Or manually:
 cd api
-uv run src/main.py  # Runs on http://localhost:8000
+uv run src/main.py
 ```
 
 ### API Endpoints
@@ -77,14 +95,22 @@ api/src/
 
 ### Setup
 ```bash
+# From project root:
+make install  # Installs both API and frontend dependencies
+
+# Or manually:
 cd frontend
 npm install
 ```
 
 ### Running
 ```bash
+# From project root:
+make frontend  # Runs on http://localhost:5173
+
+# Or manually:
 cd frontend
-npm run dev  # Runs on http://localhost:5173
+npm run dev
 ```
 
 ### Features

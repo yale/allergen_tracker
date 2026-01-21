@@ -14,27 +14,51 @@ This application fetches solid food feeding data from Huckleberry, parses the en
 - Huckleberry account credentials
 - Anthropic API key (for AI-powered meal logging)
 
-### 1. Start the API
+### Setup
+
 ```bash
-cd api
-uv sync
+# Install dependencies for both API and frontend
+make install
 
 # Create .env file with your Huckleberry credentials and Anthropic API key
+cd api
 echo "HUCKLEBERRY_EMAIL=your-email@example.com" > .env
 echo "HUCKLEBERRY_PASSWORD=your-password" >> .env
 echo "ANTHROPIC_API_KEY=your-anthropic-key" >> .env
+cd ..
+```
 
+### Running
+
+```bash
+# Run both API and frontend in parallel
+make dev
+
+# Or run individually:
+make api       # API runs at http://localhost:8000
+make frontend  # Frontend runs at http://localhost:5173
+```
+
+<details>
+<summary>Manual setup (without Make)</summary>
+
+#### 1. Start the API
+```bash
+cd api
+uv sync
 uv run src/main.py
 ```
 The API runs at http://localhost:8000
 
-### 2. Start the Frontend
+#### 2. Start the Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 The frontend runs at http://localhost:5173
+
+</details>
 
 ## API Endpoints
 
