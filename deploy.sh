@@ -12,7 +12,7 @@ fi
 
 echo "Deploying to ${NAS_HOST}..."
 
-ssh -t "${NAS_USER}@${NAS_HOST}" "sudo -i bash -c 'cd ${PROJECT_PATH} && \
+ssh -t "${NAS_USER}@${NAS_HOST}:${NAS_PORT}" "sudo -i bash -c 'cd ${PROJECT_PATH} && \
   git pull && \
   docker-compose down && \
   docker-compose up -d --build && \
