@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { AllergenList } from './components/AllergenList';
 import { MealLogger } from './components/MealLogger';
+import { NotificationToggle } from './components/NotificationToggle';
 import { fetchAllergens, refreshAllergens } from './api/allergens';
 import { useWebSocket } from './hooks/useWebSocket';
 import { config } from './config';
@@ -68,6 +69,9 @@ function App() {
             {error}
           </div>
         )}
+        <div className="mb-4">
+          <NotificationToggle />
+        </div>
         {isLoading && allergens.length === 0 ? (
           <div className="text-center text-gray-500 py-8">Loading...</div>
         ) : (

@@ -63,6 +63,9 @@ uv run src/main.py
 | POST | `/api/meals/analyze` | Analyze meal photo with AI, returns identified foods grouped by component |
 | POST | `/api/meals/submit` | Submit confirmed meal components to Huckleberry (creates one entry per component) |
 | GET | `/api/meals/suggestions` | Get known foods for autocomplete |
+| GET | `/api/push/vapid-public-key` | Get VAPID public key for push notifications |
+| POST | `/api/push/subscribe` | Subscribe to push notifications |
+| POST | `/api/push/unsubscribe` | Unsubscribe from push notifications |
 
 ### Project Structure
 ```
@@ -124,6 +127,8 @@ npm run dev
   - Each component creates a separate Huckleberry entry
   - Example: broccoli side, rice side, yogurt+shrimp → 3 separate entries
   - Multiselect combobox UI for easy food management
+- **PWA Support**: Install as a Progressive Web App on mobile devices
+- **Push Notifications**: Get notified when a new feed is logged
 
 ## Environment Variables
 
@@ -131,6 +136,19 @@ Required in `api/.env`:
 - `HUCKLEBERRY_EMAIL` - Huckleberry account email
 - `HUCKLEBERRY_PASSWORD` - Huckleberry account password
 - `ANTHROPIC_API_KEY` - Anthropic API key for Claude Vision (meal photo analysis)
+
+Optional (for push notifications):
+- `VAPID_PRIVATE_KEY` - VAPID private key for push notifications
+- `VAPID_PUBLIC_KEY` - VAPID public key for push notifications
+- `VAPID_SUBJECT` - VAPID subject (mailto: or https: URL, default: `mailto:admin@allergentracker.local`)
+
+To generate VAPID keys for push notifications, you can use the `pywebpush` library:
+```bash
+cd api
+uv run python -c "from pywebpush import generate_vapid_keys; keys = generate_vapid_keys(); print(f'VAPID_PRIVATE_KEY={keys[\"private_key\"]}\nVAPID_PUBLIC_KEY={keys[\"public_key\"]}')"
+```
+
+Add the generated keys to your `api/.env` file.
 
 ## Allergen Categories
 

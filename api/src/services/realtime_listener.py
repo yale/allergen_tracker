@@ -88,6 +88,25 @@ class AllergenCache:
                 "last_updated": self._last_updated.isoformat()
             })
 
+            # Send push notification
+            import asyncio
+            from services.push_service import PushService
+            push_service = PushService()
+            try:
+                # Run async push notification in a new event loop (we're in a callback thread)
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                loop.run_until_complete(
+                    push_service.send_notification(
+                        title="New Feed Logged",
+                        body="A new feeding has been logged in Huckleberry",
+                        data={"type": "feed_update"}
+                    )
+                )
+                loop.close()
+            except Exception as e:
+                logger.error(f"Error sending push notification: {e}")
+
             logger.info("Updated allergen cache with %d allergens from %d solid food entries",
                        len(allergens), len(solid_entries))
 
