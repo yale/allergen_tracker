@@ -24,11 +24,13 @@ async def websocket_allergens(websocket: WebSocket):
         allergens, last_updated = cache.get_allergens()
 
         if allergens:
-            await websocket.send_json({
-                "type": "update",
-                "allergens": allergens,
-                "last_updated": last_updated.isoformat() if last_updated else None
-            })
+            await websocket.send_json(
+                {
+                    "type": "update",
+                    "allergens": allergens,
+                    "last_updated": last_updated.isoformat() if last_updated else None,
+                }
+            )
 
         # Keep connection alive waiting for messages/disconnect
         while True:

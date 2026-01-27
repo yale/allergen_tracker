@@ -19,10 +19,10 @@ def is_cache_valid() -> bool:
         return False
 
     try:
-        with open(CACHE_FILE, 'r') as f:
+        with open(CACHE_FILE, "r") as f:
             data = json.load(f)
 
-        last_updated = datetime.fromisoformat(data.get('last_updated', ''))
+        last_updated = datetime.fromisoformat(data.get("last_updated", ""))
         age = datetime.now(last_updated.tzinfo) - last_updated
 
         return age < timedelta(hours=CACHE_TTL_HOURS)
@@ -36,7 +36,7 @@ def read_cache() -> dict | None:
         return None
 
     try:
-        with open(CACHE_FILE, 'r') as f:
+        with open(CACHE_FILE, "r") as f:
             return json.load(f)
     except (json.JSONDecodeError, FileNotFoundError):
         return None
@@ -46,12 +46,9 @@ def write_cache(allergens: list[dict], last_updated: datetime) -> None:
     """Write allergen data to cache file."""
     _ensure_cache_dir()
 
-    data = {
-        'allergens': allergens,
-        'last_updated': last_updated.isoformat()
-    }
+    data = {"allergens": allergens, "last_updated": last_updated.isoformat()}
 
-    with open(CACHE_FILE, 'w') as f:
+    with open(CACHE_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
 

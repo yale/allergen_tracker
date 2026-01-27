@@ -27,7 +27,9 @@ class AnalyzeResponse(BaseModel):
 
 
 class SubmitRequest(BaseModel):
-    components: list[list[str]]  # List of components, each component is a list of food names
+    components: list[
+        list[str]
+    ]  # List of components, each component is a list of food names
 
 
 class MealEntry(BaseModel):
@@ -118,6 +120,4 @@ async def get_suggestions():
     Returns foods with their allergen mappings.
     """
     suggestions = get_food_suggestions()
-    return SuggestionsResponse(
-        suggestions=[FoodSuggestion(**s) for s in suggestions]
-    )
+    return SuggestionsResponse(suggestions=[FoodSuggestion(**s) for s in suggestions])

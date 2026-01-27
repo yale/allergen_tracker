@@ -62,12 +62,12 @@ def convert_heic_to_jpeg(image_data: bytes) -> tuple[bytes, str]:
     img = Image.open(io.BytesIO(image_data))
 
     # Convert to RGB if necessary (handles RGBA, palette, etc.)
-    if img.mode in ('RGBA', 'LA', 'P'):
-        img = img.convert('RGB')
+    if img.mode in ("RGBA", "LA", "P"):
+        img = img.convert("RGB")
 
     # Save as JPEG
     output = io.BytesIO()
-    img.save(output, format='JPEG', quality=90)
+    img.save(output, format="JPEG", quality=90)
     output.seek(0)
 
     return output.read(), "image/jpeg"
@@ -75,14 +75,14 @@ def convert_heic_to_jpeg(image_data: bytes) -> tuple[bytes, str]:
 
 def is_heic(media_type: str, image_data: bytes) -> bool:
     """Check if the image is HEIC/HEIF format."""
-    if media_type in ('image/heic', 'image/heif'):
+    if media_type in ("image/heic", "image/heif"):
         return True
     # Check magic bytes for HEIC (ftyp followed by heic, heix, mif1, etc.)
     if len(image_data) >= 12:
         # HEIC files have 'ftyp' at offset 4
-        if image_data[4:8] == b'ftyp':
+        if image_data[4:8] == b"ftyp":
             brand = image_data[8:12]
-            if brand in (b'heic', b'heix', b'mif1', b'msf1', b'hevc', b'hevx'):
+            if brand in (b"heic", b"heix", b"mif1", b"msf1", b"hevc", b"hevx"):
                 return True
     return False
 
@@ -186,14 +186,14 @@ Return ONLY the JSON object, no other text."""
         foods_with_allergens = []
         for food in foods:
             allergens = get_allergens_for_food(food)
-            foods_with_allergens.append({
-                "name": food,
-                "allergens": allergens,
-            })
+            foods_with_allergens.append(
+                {
+                    "name": food,
+                    "allergens": allergens,
+                }
+            )
 
-        processed_components.append({
-            "foods": foods_with_allergens
-        })
+        processed_components.append({"foods": foods_with_allergens})
 
     return {
         "components": processed_components,
@@ -206,8 +206,10 @@ def get_food_suggestions() -> list[dict[str, Any]]:
     suggestions = []
     for food in ALL_KNOWN_FOODS:
         allergens = get_allergens_for_food(food)
-        suggestions.append({
-            "name": food,
-            "allergens": allergens,
-        })
+        suggestions.append(
+            {
+                "name": food,
+                "allergens": allergens,
+            }
+        )
     return suggestions

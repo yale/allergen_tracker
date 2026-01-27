@@ -10,8 +10,7 @@ def get_api_client() -> HuckleberryAPI:
     load_dotenv()
 
     api = HuckleberryAPI(
-        email=os.getenv("HUCKLEBERRY_EMAIL"),
-        password=os.getenv("HUCKLEBERRY_PASSWORD")
+        email=os.getenv("HUCKLEBERRY_EMAIL"), password=os.getenv("HUCKLEBERRY_PASSWORD")
     )
     api.authenticate()
 
@@ -59,7 +58,9 @@ def extract_solid_food_entries(all_entries: list[tuple[str, dict]]) -> list[dict
     Returns:
         list: List of entry_data dicts sorted by timestamp (newest first)
     """
-    solid_entries = [data for entry_id, data in all_entries if data.get("mode") == "solids"]
+    solid_entries = [
+        data for entry_id, data in all_entries if data.get("mode") == "solids"
+    ]
     solid_entries.sort(key=lambda x: x.get("start", 0), reverse=True)
     return solid_entries
 

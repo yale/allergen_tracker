@@ -18,7 +18,7 @@ async def get_allergens():
     if not allergens:
         raise HTTPException(
             status_code=503,
-            detail="Allergen data not yet available. Please wait for cache to initialize."
+            detail="Allergen data not yet available. Please wait for cache to initialize.",
         )
 
     return AllergenResponse(allergens=allergens, last_updated=last_updated)
@@ -37,5 +37,5 @@ async def refresh_cache():
     return RefreshResponse(
         status="success",
         message="Cache refreshed successfully",
-        last_updated=last_updated
+        last_updated=last_updated,
     )

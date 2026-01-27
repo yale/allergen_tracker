@@ -65,13 +65,15 @@ def submit_meal(components: list[list[str]]) -> dict:
             "Created solid food entry %s with %d foods: %s",
             new_doc_ref.id,
             len(component_foods),
-            component_foods
+            component_foods,
         )
 
-        entries.append({
-            "entry_id": new_doc_ref.id,
-            "foods": component_foods,
-        })
+        entries.append(
+            {
+                "entry_id": new_doc_ref.id,
+                "foods": component_foods,
+            }
+        )
 
     return {
         "status": "success",

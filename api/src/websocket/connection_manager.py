@@ -38,12 +38,17 @@ class ConnectionManager:
         """Accept and register a new WebSocket connection."""
         await websocket.accept()
         self._connections.add(websocket)
-        logger.info("WebSocket client connected. Total connections: %d", len(self._connections))
+        logger.info(
+            "WebSocket client connected. Total connections: %d", len(self._connections)
+        )
 
     def disconnect(self, websocket: WebSocket) -> None:
         """Remove a WebSocket connection."""
         self._connections.discard(websocket)
-        logger.info("WebSocket client disconnected. Total connections: %d", len(self._connections))
+        logger.info(
+            "WebSocket client disconnected. Total connections: %d",
+            len(self._connections),
+        )
 
     async def broadcast(self, data: dict[str, Any]) -> None:
         """Send data to all connected clients."""

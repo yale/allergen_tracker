@@ -9,7 +9,10 @@ from dotenv import load_dotenv
 from huckleberry_api import HuckleberryAPI
 
 from cache.file_cache import read_cache, write_cache, CACHE_FILE
-from services.allergen_service import process_solid_food_data, calculate_allergen_exposure
+from services.allergen_service import (
+    process_solid_food_data,
+    calculate_allergen_exposure,
+)
 from services.huckleberry import fetch_all_feed_intervals, extract_solid_food_entries
 
 logger = logging.getLogger(__name__)
@@ -42,10 +45,11 @@ class AllergenCache:
         try:
             if CACHE_FILE.exists():
                 import json
-                with open(CACHE_FILE, 'r') as f:
+
+                with open(CACHE_FILE, "r") as f:
                     data = json.load(f)
-                self._allergens = data.get('allergens', [])
-                self._last_updated = datetime.fromisoformat(data['last_updated'])
+                self._allergens = data.get("allergens", [])
+                self._last_updated = datetime.fromisoformat(data["last_updated"])
                 logger.info("Loaded %d allergens from file cache", len(self._allergens))
                 return True
         except Exception as e:
@@ -81,15 +85,21 @@ class AllergenCache:
 
             # Broadcast update to WebSocket clients
             from websocket.connection_manager import ConnectionManager
-            manager = ConnectionManager.get_instance()
-            manager.broadcast_sync({
-                "type": "update",
-                "allergens": allergens,
-                "last_updated": self._last_updated.isoformat()
-            })
 
-            logger.info("Updated allergen cache with %d allergens from %d solid food entries",
-                       len(allergens), len(solid_entries))
+            manager = ConnectionManager.get_instance()
+            manager.broadcast_sync(
+                {
+                    "type": "update",
+                    "allergens": allergens,
+                    "last_updated": self._last_updated.isoformat(),
+                }
+            )
+
+            logger.info(
+                "Updated allergen cache with %d allergens from %d solid food entries",
+                len(allergens),
+                len(solid_entries),
+            )
 
         except Exception as e:
             logger.error("Error fetching and updating allergens: %s", e)
@@ -112,7 +122,7 @@ class AllergenCache:
         load_dotenv()
         self._api = HuckleberryAPI(
             email=os.getenv("HUCKLEBERRY_EMAIL"),
-            password=os.getenv("HUCKLEBERRY_PASSWORD")
+            password=os.getenv("HUCKLEBERRY_PASSWORD"),
         )
         self._api.authenticate()
         logger.info("Authenticated with Huckleberry API")
