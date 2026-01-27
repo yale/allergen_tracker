@@ -15,7 +15,7 @@ ALLERGEN_FOOD_MAP = {
     'peanut': ['peanut', 'peanut butter', 'bamba'],
     'tree nut': ['almond', 'almond flour', 'almond milk', 'almond butter',
                  'cashew', 'walnut', 'pecan', 'pistachio', 'brazil nut', 'hazelnut', 'macadamia', 'pine nut'],
-    'wheat': ['wheat', 'toast', 'bread', 'pasta', 'noodles', 'couscous', 'matzah', 'challah'],
+    'wheat': ['pizza', 'wheat', 'toast', 'bread', 'pasta', 'noodles', 'couscous', 'matzah', 'challah'],
     'soy': ['soybean oil', 'soy milk', 'soybean', 'edamame', 'tofu'],
     'sesame': ['sesame', 'sesame oil', 'tahini', 'hummus']
 }
