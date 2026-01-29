@@ -10,20 +10,20 @@ else
   exit 1
 fi
 
-echo "Setting up passwordless SSH to ${NAS_USER}@${NAS_HOST}..."
+echo "Setting up passwordless SSH to ${DEPLOY_USER}@${DEPLOY_HOST}..."
 
 # Copy SSH key
-ssh-copy-id "${NAS_USER}@${NAS_HOST}"
+ssh-copy-id "${DEPLOY_USER}@${DEPLOY_HOST}"
 
 echo ""
-echo "SSH key copied! Now you need to configure passwordless sudo on the NAS."
+echo "SSH key copied! Now you need to configure passwordless sudo on the DEPLOY."
 echo ""
-echo "Run the following commands on your NAS (you'll be prompted for password):"
+echo "Run the following commands on your DEPLOY (you'll be prompted for password):"
 echo ""
-echo "  ssh ${NAS_USER}@${NAS_HOST}"
+echo "  ssh ${DEPLOY_USER}@${DEPLOY_HOST}"
 echo "  sudo visudo"
 echo ""
 echo "Add this line at the end:"
-echo "  ${NAS_USER} ALL=(ALL) NOPASSWD: /usr/local/bin/docker-compose, /usr/bin/docker"
+echo "  ${DEPLOY_USER} ALL=(ALL) NOPASSWD: /usr/local/bin/docker-compose, /usr/bin/docker"
 echo ""
 echo "Save and exit (Ctrl+X, then Y, then Enter)"

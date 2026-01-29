@@ -10,12 +10,12 @@ else
   exit 1
 fi
 
-echo "Deploying to ${NAS_HOST}..."
+echo "Deploying to ${DEPLOY_HOST}..."
 
-ssh -t "${NAS_USER}@${NAS_HOST}" -p ${NAS_PORT} "sudo -i bash -c 'cd ${PROJECT_PATH} && \
+ssh -t "${DEPLOY_USER}@${DEPLOY_HOST}" -p ${DEPLOY_PORT} "source ~/.zprofile && cd ${PROJECT_PATH} && \
   git pull && \
   docker-compose down && \
   docker-compose up -d --build && \
-  docker image prune -f'"
+  docker image prune -f"
 
 echo "Deployment complete!"
