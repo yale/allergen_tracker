@@ -9,3 +9,9 @@ export interface AllergenResponse {
   allergens: Allergen[];
   last_updated: string;
 }
+
+export interface RefreshResponse {
+  status: string;
+  message: string;
+  last_updated: string;
+}

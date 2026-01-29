@@ -1,4 +1,4 @@
-import type { AllergenResponse } from '../types/allergen';
+import type { AllergenResponse, RefreshResponse } from '../types/allergen';
 
 const API_BASE = '/api';
 
@@ -10,7 +10,7 @@ export async function fetchAllergens(): Promise<AllergenResponse> {
   return response.json();
 }
 
-export async function refreshAllergens(): Promise<AllergenResponse> {
+export async function refreshAllergens(): Promise<RefreshResponse> {
   const response = await fetch(`${API_BASE}/refresh`, {
     method: 'POST',
   });

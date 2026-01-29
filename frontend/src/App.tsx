@@ -39,7 +39,8 @@ function App() {
     setIsLoading(true);
     try {
       setError(null);
-      const data = await refreshAllergens();
+      await refreshAllergens();
+      const data = await fetchAllergens();
       setAllergens(data.allergens);
       setLastUpdated(data.last_updated);
     } catch (err) {
