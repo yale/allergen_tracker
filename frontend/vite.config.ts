@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['icon.png'],
+      includeAssets: ['icon.png', 'apple-touch-icon.png'],
       manifest: {
         name: 'Allergen Tracker',
         short_name: 'Allergen Tracker',
