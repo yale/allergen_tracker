@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { AllergenList } from './components/AllergenList';
 import { MealLogger } from './components/MealLogger';
+import { UpdatePrompt } from './components/UpdatePrompt';
 import { fetchAllergens, refreshAllergens } from './api/allergens';
 import { useWebSocket } from './hooks/useWebSocket';
 import { config } from './config';
@@ -81,6 +82,7 @@ function App() {
           onClose={() => setIsMealLoggerOpen(false)}
         />
       )}
+      <UpdatePrompt />
     </div>
   );
 }
