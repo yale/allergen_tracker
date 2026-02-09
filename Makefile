@@ -1,4 +1,4 @@
-.PHONY: dev api frontend install
+.PHONY: dev api frontend install deploy
 
 dev:
 	@make -j2 api frontend
@@ -12,3 +12,6 @@ frontend:
 install:
 	cd api && uv sync
 	cd frontend && npm install
+
+deploy:
+	./deploy.sh

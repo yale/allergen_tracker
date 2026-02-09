@@ -39,6 +39,24 @@ make api       # API runs at http://localhost:8000
 make frontend  # Frontend runs at http://localhost:5173
 ```
 
+### Deployment
+
+```bash
+# Deploy to production server
+make deploy
+```
+
+**Prerequisites for deployment:**
+1. Copy `.env.deploy.example` to `.env.deploy` and configure:
+   - `DEPLOY_HOST` - Server hostname/IP
+   - `DEPLOY_USER` - SSH username
+   - `DEPLOY_PORT` - SSH port
+   - `PROJECT_PATH` - Path to project on server
+2. Ensure SSH access is configured for the deployment server
+3. Server must have Docker and docker-compose installed
+
+The deployment script connects via SSH, pulls the latest code, and rebuilds Docker containers.
+
 <details>
 <summary>Manual setup (without Make)</summary>
 

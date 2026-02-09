@@ -22,7 +22,27 @@ make install   # Install dependencies for both API and frontend
 make dev       # Run API and frontend in parallel
 make api       # Run API only
 make frontend  # Run frontend only
+make deploy    # Deploy to production server via SSH
 ```
+
+## Deployment
+
+The project uses Docker-based deployment to a remote server:
+
+```bash
+make deploy  # Runs ./deploy.sh
+```
+
+**Requirements:**
+- `.env.deploy` file with server configuration (see `.env.deploy.example`)
+- SSH access to deployment server
+- Docker and docker-compose on server
+
+The deployment script:
+1. SSH into the configured server
+2. Pulls latest code from git
+3. Rebuilds and restarts Docker containers
+4. Cleans up old images
 
 ## API (`/api`)
 
