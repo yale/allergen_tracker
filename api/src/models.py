@@ -25,3 +25,13 @@ class RefreshResponse(BaseModel):
     status: str
     message: str
     last_updated: datetime
+
+
+class FeedEntry(BaseModel):
+    timestamp: datetime
+    foods: list[str]
+
+
+class FeedLogResponse(BaseModel):
+    entries: list[FeedEntry]
+    total_count: int

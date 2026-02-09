@@ -15,3 +15,13 @@ export interface RefreshResponse {
   message: string;
   last_updated: string;
 }
+
+export interface FeedEntry {
+  timestamp: string;
+  foods: string[];
+}
+
+export interface FeedLogResponse {
+  entries: FeedEntry[];
+  total_count: number;
+}
