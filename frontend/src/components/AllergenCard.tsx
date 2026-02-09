@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { Allergen } from "../types/allergen";
+import { useCurrentTime } from "../hooks/useCurrentTime";
+import { formatRelativeTime } from "../utils/timeUtils";
 
 interface AllergenCardProps {
   allergen: Allergen;
@@ -43,6 +45,13 @@ const ALLERGEN_EMOJI: Record<string, string> = {
 
 export function AllergenCard({ allergen }: AllergenCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const currentTime = useCurrentTime(60000); // Update every minute
+
+  // Format relative time for exposure
+  const relativeTime = allergen.last_exposure_date
+    ? formatRelativeTime(new Date(allergen.last_exposure_date), currentTime)
+    : null;
+
   const bgColor = getBackgroundColor(allergen.days_since_exposure);
   const borderColor = getBorderColor(allergen.days_since_exposure);
 
@@ -76,13 +85,8 @@ export function AllergenCard({ allergen }: AllergenCardProps) {
           )}
         </div>
         <div className="text-right">
-          <div className="text-2xl font-bold">
-            {allergen.days_since_exposure !== null
-              ? allergen.days_since_exposure
-              : "—"}
-          </div>
-          <div className="text-xs text-gray-600">
-            {allergen.days_since_exposure !== null ? "days ago" : "never"}
+          <div className="text-sm font-semibold text-gray-700">
+            {relativeTime || "never"}
           </div>
         </div>
       </div>

@@ -1,3 +1,6 @@
+import { useCurrentTime } from '../hooks/useCurrentTime';
+import { formatRelativeTime } from '../utils/timeUtils';
+
 interface HeaderProps {
   lastUpdated: string | null;
   onRefresh: () => void;
@@ -6,18 +9,13 @@ interface HeaderProps {
   onLogMeal?: () => void;
 }
 
-function formatDateTime(dateStr: string | null): string {
-  if (!dateStr) return 'Never';
-  const date = new Date(dateStr);
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  });
-}
-
 export function Header({ lastUpdated, onRefresh, isLoading, isConnected, onLogMeal }: HeaderProps) {
+  const currentTime = useCurrentTime(60000); // Update every minute
+
+  const relativeTime = lastUpdated
+    ? formatRelativeTime(new Date(lastUpdated), currentTime)
+    : 'never';
+
   return (
     <header className="bg-white shadow-sm mb-3">
       <div className="max-w-6xl mx-auto px-4 py-2">
@@ -35,7 +33,7 @@ export function Header({ lastUpdated, onRefresh, isLoading, isConnected, onLogMe
               )}
             </h1>
             <p className="text-xs text-gray-500">
-              Last updated: {formatDateTime(lastUpdated)}
+              Last updated: {relativeTime}
             </p>
           </div>
           <div className="flex items-center gap-2">
