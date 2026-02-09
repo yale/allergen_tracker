@@ -11,6 +11,13 @@ export function UpdatePrompt() {
   } = useRegisterSW({
     onRegistered(r) {
       console.log('Service Worker registered:', r);
+      // Check for updates every 60 seconds
+      if (r) {
+        setInterval(() => {
+          console.log('Checking for service worker updates...');
+          r.update();
+        }, 60000);
+      }
     },
     onRegisterError(error) {
       console.error('Service Worker registration error:', error);
