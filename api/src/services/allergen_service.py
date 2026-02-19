@@ -30,7 +30,7 @@ ALLERGEN_FOOD_MAP = {
         "crab",
         "crayfish",
         "crawfish",
-        "shrimp gyoza (Trader Joe's)"
+        "shrimp gyoza (trader joe's)"
     ],
     "peanut": ["peanut", "peanut butter", "bamba"],
     "tree nut": [
@@ -57,9 +57,9 @@ ALLERGEN_FOOD_MAP = {
         "couscous",
         "matzah",
         "challah",
-        "shrimp gyoza (Trader Joe's)"
+        "shrimp gyoza (trader joe's)"
     ],
-    "soy": ["soybean oil", "soy milk", "soybean", "edamame", "tofu", "shrimp gyoza (Trader Joe's)"],
+    "soy": ["soybean oil", "soy milk", "soybean", "edamame", "tofu", "shrimp gyoza (trader joe's)"],
     "sesame": ["sesame", "sesame oil", "tahini", "hummus"],
 }
 
@@ -102,8 +102,9 @@ def calculate_allergen_exposure(df: pd.DataFrame) -> list[dict]:
     allergen_data = []
 
     for allergen, foods in ALLERGEN_FOOD_MAP.items():
-        # Find entries matching this allergen's foods
-        mask = df["food"].isin(foods)
+        # Find entries matching this allergen's foods (case insensitive)
+        foods_lower = [f.lower() for f in foods]
+        mask = df["food"].isin(foods_lower)
         matching_entries = df[mask]
 
         if matching_entries.empty:
