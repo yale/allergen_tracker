@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchFeedLog } from '../api/allergens';
 import type { FeedEntry } from '../types/allergen';
+import { getAllergenEmojis } from '../utils/allergenUtils';
 
 interface FeedLogProps {
   isOpen: boolean;
@@ -77,14 +78,20 @@ export function FeedLog({ isOpen, onClose }: FeedLogProps) {
                     {formatDate(entry.timestamp)}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {entry.foods.map((food, foodIndex) => (
-                      <span
-                        key={foodIndex}
-                        className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
-                      >
-                        {food}
-                      </span>
-                    ))}
+                    {entry.foods.map((food, foodIndex) => {
+                      const emojis = getAllergenEmojis(food);
+                      return (
+                        <span
+                          key={foodIndex}
+                          className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                        >
+                          {emojis.length > 0 && (
+                            <span className="mr-1">{emojis.join(' ')}</span>
+                          )}
+                          {food}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
