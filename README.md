@@ -121,6 +121,7 @@ The frontend runs at http://localhost:5173
   - Each component creates a separate Huckleberry entry
   - Multiselect combobox UI for easy editing
   - Autocomplete suggestions for known allergen foods
+- Installable web app via "Add to Home Screen" on mobile devices
 
 ## Roadmap
 
