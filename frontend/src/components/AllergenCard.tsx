@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Allergen } from "../types/allergen";
 import { useCurrentTime } from "../hooks/useCurrentTime";
-import { formatRelativeTime } from "../utils/timeUtils";
+import { formatRelativeTime, daysSince } from "../utils/timeUtils";
 
 interface AllergenCardProps {
   allergen: Allergen;
@@ -47,13 +47,18 @@ export function AllergenCard({ allergen }: AllergenCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const currentTime = useCurrentTime(60000); // Update every minute
 
+  // Calculate days since exposure using current time (updates automatically)
+  const daysSinceExposure = allergen.last_exposure_date
+    ? daysSince(new Date(allergen.last_exposure_date), currentTime)
+    : null;
+
   // Format relative time for exposure
   const relativeTime = allergen.last_exposure_date
     ? formatRelativeTime(new Date(allergen.last_exposure_date), currentTime)
     : null;
 
-  const bgColor = getBackgroundColor(allergen.days_since_exposure);
-  const borderColor = getBorderColor(allergen.days_since_exposure);
+  const bgColor = getBackgroundColor(daysSinceExposure);
+  const borderColor = getBorderColor(daysSinceExposure);
 
   return (
     <div
