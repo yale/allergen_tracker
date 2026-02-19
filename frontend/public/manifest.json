@@ -1,0 +1,17 @@
+{
+  "name": "Allergen Tracker",
+  "short_name": "Allergen Tracker",
+  "description": "Track allergen exposure for babies using the Huckleberry API",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
