@@ -30,6 +30,7 @@ ALLERGEN_FOOD_MAP = {
         "crab",
         "crayfish",
         "crawfish",
+        "shrimp gyoza (Trader Joe's)"
     ],
     "peanut": ["peanut", "peanut butter", "bamba"],
     "tree nut": [
@@ -56,8 +57,9 @@ ALLERGEN_FOOD_MAP = {
         "couscous",
         "matzah",
         "challah",
+        "shrimp gyoza (Trader Joe's)"
     ],
-    "soy": ["soybean oil", "soy milk", "soybean", "edamame", "tofu"],
+    "soy": ["soybean oil", "soy milk", "soybean", "edamame", "tofu", "shrimp gyoza (Trader Joe's)"],
     "sesame": ["sesame", "sesame oil", "tahini", "hummus"],
 }
 
