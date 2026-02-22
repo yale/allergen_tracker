@@ -22,7 +22,7 @@ ALLERGEN_FOOD_MAP = {
         "ricotta cheese",
     ],
     "egg": ["egg", "omelette", "omlette", "scrambled egg", "egg white", "egg yolk", "challah"],
-    "fish": ["salmon", "sardine", "tuna", "cod", "tilapia", "anchovy"],
+    "fish": ["salmon", "sardine", "tuna", "cod", "tilapia", "anchovy", "fish"],
     "crustacean shellfish": [
         "shrimp",
         "prawn",
