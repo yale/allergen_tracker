@@ -20,8 +20,10 @@ ALLERGEN_FOOD_MAP = {
         "cream cheese",
         "cottage cheese",
         "ricotta cheese",
+        "pancake",
+        "ice cream"
     ],
-    "egg": ["egg", "omelette", "omlette", "scrambled egg", "egg white", "egg yolk", "challah"],
+    "egg": ["egg", "omelette", "omlette", "scrambled egg", "egg white", "egg yolk", "challah", "pancake"],
     "fish": ["salmon", "sardine", "tuna", "cod", "tilapia", "anchovy", "fish"],
     "crustacean shellfish": [
         "shrimp",
@@ -57,7 +59,8 @@ ALLERGEN_FOOD_MAP = {
         "couscous",
         "matzah",
         "challah",
-        "shrimp gyoza (trader joe's)"
+        "shrimp gyoza (trader joe's)",
+        "pancake"
     ],
     "soy": ["soybean oil", "soy milk", "soybean", "edamame", "tofu", "shrimp gyoza (trader joe's)"],
     "sesame": ["sesame", "sesame oil", "tahini", "hummus"],
