@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { AllergenList } from './components/AllergenList';
-import { MealLogger } from './components/MealLogger';
 import { FeedLog } from './components/FeedLog';
 import { fetchAllergens, refreshAllergens } from './api/allergens';
 import { useWebSocket } from './hooks/useWebSocket';
-import { config } from './config';
 import type { Allergen, AllergenResponse } from './types/allergen';
 
 function App() {
@@ -13,7 +11,6 @@ function App() {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMealLoggerOpen, setIsMealLoggerOpen] = useState(false);
   const [isFeedLogOpen, setIsFeedLogOpen] = useState(false);
 
   const handleWebSocketUpdate = useCallback((data: AllergenResponse) => {
@@ -63,7 +60,6 @@ function App() {
         onRefresh={handleRefresh}
         isLoading={isLoading}
         isConnected={isConnected}
-        onLogMeal={config.features.mealLogging ? () => setIsMealLoggerOpen(true) : undefined}
         onViewFeedLog={() => setIsFeedLogOpen(true)}
       />
       <main className="max-w-6xl mx-auto px-4 pb-4">
@@ -78,12 +74,6 @@ function App() {
           <AllergenList allergens={allergens} />
         )}
       </main>
-      {config.features.mealLogging && (
-        <MealLogger
-          isOpen={isMealLoggerOpen}
-          onClose={() => setIsMealLoggerOpen(false)}
-        />
-      )}
       <FeedLog
         isOpen={isFeedLogOpen}
         onClose={() => setIsFeedLogOpen(false)}
